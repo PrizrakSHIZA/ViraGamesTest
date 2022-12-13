@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    public bool canPush = true;
+
     [SerializeField] Trajectory trajectory;
     [SerializeField] float pushForce = 4f;
 
@@ -47,12 +49,14 @@ public class BallController : MonoBehaviour
 
     void Push(Vector2 force)
     {
-        rb.AddForce(force, ForceMode2D.Impulse);
+        if(canPush)
+            rb.AddForce(force, ForceMode2D.Impulse);
     }
 
     //-Drag--------------------------------------
     void OnDragStart()
     {
+        if (!canPush) return;
         startPoint = cam.ScreenToWorldPoint(Input.mousePosition);
         trajectory.Show();
     }
@@ -68,10 +72,10 @@ public class BallController : MonoBehaviour
 
         Debug.DrawLine(startPoint, endPoint);
     }
+
     void OnDragEnd()
     {
         Push(force);
         trajectory.Hide();
     }
-
 }
