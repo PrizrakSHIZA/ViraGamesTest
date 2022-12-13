@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetShaking : MonoBehaviour
+public class Basket : MonoBehaviour
 {
     public bool inBasket = false;
 
@@ -12,11 +12,20 @@ public class NetShaking : MonoBehaviour
     [SerializeField] float strength;
     [SerializeField] int vibrato;
     [SerializeField] float randomness;
+    [Space]
+    [SerializeField] Transform ballPos;
 
     bool inMotion = false;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (inBasket)
+        {
+            BallController.Singleton.DisableRB();
+            collision.gameObject.transform.position = ballPos.position;
+            collision.gameObject.transform.SetParent(ballPos.transform, true);
+            BallController.Singleton.canPush = true;
+        }
         if (!inBasket && !inMotion)
         {
             inMotion = true;

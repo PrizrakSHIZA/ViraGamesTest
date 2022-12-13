@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    public static BallController Singleton;
+
     public bool canPush = true;
 
     [SerializeField] Trajectory trajectory;
@@ -24,6 +26,8 @@ public class BallController : MonoBehaviour
 
     void Start()
     {
+        if(!Singleton) Singleton = this;
+
         rb = GetComponent<Rigidbody2D>();
         cam = Camera.main;
     }
@@ -47,10 +51,23 @@ public class BallController : MonoBehaviour
         }
     }
 
+    public void DisableRB()
+    {
+        rb.bodyType = RigidbodyType2D.Static;
+    }
+
+    public void EnableRB()
+    {
+        rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+
     void Push(Vector2 force)
     {
-        if(canPush)
+        if (canPush)
+        {
+            canPush = false;
             rb.AddForce(force, ForceMode2D.Impulse);
+        }
     }
 
     //-Drag--------------------------------------
@@ -75,6 +92,8 @@ public class BallController : MonoBehaviour
 
     void OnDragEnd()
     {
+        EnableRB();
+        transform.SetParent(null);
         Push(force);
         trajectory.Hide();
     }
