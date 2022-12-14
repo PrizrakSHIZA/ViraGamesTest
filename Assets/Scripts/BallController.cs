@@ -9,11 +9,14 @@ public class BallController : MonoBehaviour
 {
     public static BallController Singleton;
 
-    public bool canPush = true;
+    public bool canPush = false;
     public Basket currentBasket;
 
     [SerializeField] Trajectory trajectory;
     [SerializeField] float pushForce = 4f;
+
+    [HideInInspector] public bool wallBounce = false;
+    [HideInInspector] public int hitCount = 0;
 
     #region private hidden
     bool isDragging = false;
@@ -24,7 +27,7 @@ public class BallController : MonoBehaviour
     Vector2 endPoint;
     Vector2 direction;
     Vector2 force;
-    float distance; 
+    float distance;
     #endregion
 
     void Start()
@@ -53,6 +56,11 @@ public class BallController : MonoBehaviour
         {
             OnDrag();
         }
+
+        if (transform.position.y <= -5f)
+        {
+            GameManager.Singleton.GameOver();
+        }
     }
 
     public void DisableRB()
@@ -80,6 +88,12 @@ public class BallController : MonoBehaviour
             StartCoroutine(Timer(.1f, EnableCollision));
             currentBasket.NormalizeNet();
         }
+    }
+
+    public void ClearHitData()
+    {
+        wallBounce = false;
+        hitCount = 0;
     }
 
     IEnumerator Timer(float time, Action action)
@@ -116,5 +130,14 @@ public class BallController : MonoBehaviour
         transform.SetParent(null);
         Push(force);
         trajectory.Hide();
+    }
+
+    //-Colliders---------------------------------
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.tag == "Wall")
+            wallBounce = true;
+        else if (collision.collider.tag == "Ring")
+            hitCount++;
     }
 }

@@ -4,13 +4,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Singleton;
 
+    [SerializeField] float moveSpeed = 3f;
     [SerializeField] Basket[] basketList;
     [SerializeField] GameObject basketPrefab;
     [SerializeField] Transform gameField;
 
     int globalBasket = 0;
-    int score = 0;
+    [SerializeField] int score = 0;
     int starCount = 0;
+
+    int baseScore = 1;
 
     int lastBasketId = 3;
     int currentBasket { get { if (lastBasketId - 1 < 0) return 3; else return lastBasketId - 1; } }
@@ -31,7 +34,7 @@ public class GameManager : MonoBehaviour
     {
         if (basketList[currentBasket].transform.position.y > -3f)
         {
-            gameField.position += new Vector3(0, -3f, 0f) * Time.deltaTime;
+            gameField.position -= new Vector3(0, moveSpeed, 0f) * Time.deltaTime;
         }
     }
 
@@ -39,9 +42,36 @@ public class GameManager : MonoBehaviour
     {
         // check if its next bucket adn not the same
         if (id == globalBasket) 
-        { 
+        {
+            AddScore();
             SpawnBasket();
         }
+    }
+
+    public void GameOver()
+    {
+        if (score == 0)
+        { 
+            BallController.Singleton.transform.position = basketList[currentBasket].transform.position;
+            basketList[currentBasket].transform.rotation = Quaternion.identity;
+            BallController.Singleton.ClearHitData();
+        }
+        else
+        { 
+            
+        }
+    }
+
+    void AddScore()
+    {
+        int toAdd = baseScore;
+        if (BallController.Singleton.wallBounce) toAdd *= 2;
+        if (BallController.Singleton.hitCount == 0) toAdd *= 2;
+
+        score += toAdd;
+
+        //clear data from ball
+        BallController.Singleton.ClearHitData();
     }
 
     void SpawnBasket()
@@ -77,10 +107,5 @@ public class GameManager : MonoBehaviour
 
         nextBasket.SetActive(true);
         //spawn animation
-    }
-
-    void GameOver()
-    { 
-        
     }
 }
