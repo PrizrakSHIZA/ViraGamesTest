@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class BallController : MonoBehaviour
 {
     public static BallController Singleton;
 
     public bool canPush = true;
+    public Basket currentBasket;
 
     [SerializeField] Trajectory trajectory;
     [SerializeField] float pushForce = 4f;
@@ -17,6 +19,7 @@ public class BallController : MonoBehaviour
     bool isDragging = false;
     Camera cam;
     Rigidbody2D rb;
+    CircleCollider2D circleCollider;
     Vector2 startPoint;
     Vector2 endPoint;
     Vector2 direction;
@@ -29,6 +32,7 @@ public class BallController : MonoBehaviour
         if(!Singleton) Singleton = this;
 
         rb = GetComponent<Rigidbody2D>();
+        circleCollider = GetComponent<CircleCollider2D>();
         cam = Camera.main;
     }
 
@@ -54,11 +58,17 @@ public class BallController : MonoBehaviour
     public void DisableRB()
     {
         rb.bodyType = RigidbodyType2D.Static;
+        circleCollider.enabled = false;
     }
 
     public void EnableRB()
     {
         rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+
+    public void EnableCollision()
+    { 
+        circleCollider.enabled = true;
     }
 
     void Push(Vector2 force)
@@ -67,7 +77,15 @@ public class BallController : MonoBehaviour
         {
             canPush = false;
             rb.AddForce(force, ForceMode2D.Impulse);
+            StartCoroutine(Timer(.1f, EnableCollision));
+            currentBasket.NormalizeNet();
         }
+    }
+
+    IEnumerator Timer(float time, Action action)
+    {
+        yield return new WaitForSeconds(time);
+        action.Invoke();
     }
 
     //-Drag--------------------------------------
@@ -86,6 +104,8 @@ public class BallController : MonoBehaviour
         force = direction * distance * pushForce;
 
         trajectory.UpdateDots(transform.position, force);
+        currentBasket.RotateTo(direction);
+        currentBasket.PullNet(Mathf.Clamp(distance, 1, 2));
 
         Debug.DrawLine(startPoint, endPoint);
     }

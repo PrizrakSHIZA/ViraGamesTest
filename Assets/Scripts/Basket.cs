@@ -14,11 +14,25 @@ public class Basket : MonoBehaviour
     [SerializeField] float randomness;
     [Space]
     [SerializeField] Transform ballPos;
+    [SerializeField] Transform net;
 
+    Vector3 baseBallPos;
     bool inMotion = false;
+
+    private void Start()
+    {
+        baseBallPos = ballPos.localPosition;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //net shaking
+        if (!inBasket && !inMotion)
+        {
+            inMotion = true;
+            net.DOShakeScale(time, strength, vibrato, randomness).OnComplete(() => { inMotion = false; });
+        }
+
         if (inBasket)
         {
             BallController.Singleton.DisableRB();
@@ -26,20 +40,33 @@ public class Basket : MonoBehaviour
             collision.gameObject.transform.SetParent(ballPos.transform, true);
             BallController.Singleton.canPush = true;
         }
-        if (!inBasket && !inMotion)
-        {
-            inMotion = true;
-            transform.DOShakeScale(time, strength, vibrato, randomness).OnComplete(() => { inMotion = false; });
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         inBasket = true;
+        BallController.Singleton.currentBasket = this;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         inBasket = false;
+    }
+
+    public void RotateTo(Vector3 direction)
+    {
+        transform.rotation = Quaternion.LookRotation(Vector3.forward, direction);
+    }
+
+    public void PullNet(float strength)
+    {
+        net.localScale = new Vector3(1, strength, 1);
+        ballPos.localPosition = new Vector3(ballPos.localPosition.x, baseBallPos.y - (strength-1)/2, 0);
+    }
+
+    public void NormalizeNet()
+    {
+        net.DOScaleY(1f, .5f).SetEase(Ease.OutBounce);
+        ballPos.localPosition = baseBallPos;
     }
 }
