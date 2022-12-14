@@ -114,8 +114,10 @@ public class GameManager : MonoBehaviour
         nextBasket.id = globalBasket;
 
         //star spawn
-        if(Random.Range(0f, 1f) <= starChance)
-            nextBasket.star.SetActive(true);
+        if (Random.Range(0f, 1f) <= starChance)
+        {
+            nextBasket.star.GetComponent<Star>().Init();
+        }
 
         nextBasket.gameObject.SetActive(true);
 

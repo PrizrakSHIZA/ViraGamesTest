@@ -19,6 +19,7 @@ public class Basket : MonoBehaviour
     [SerializeField] Transform net;
     public GameObject star;
 
+    AudioSource audioSource;
     Vector3 baseBallPos;
     bool inMotion = false;
     float desireScale;
@@ -27,6 +28,7 @@ public class Basket : MonoBehaviour
     {
         baseBallPos = ballPos.localPosition;
         desireScale = transform.localScale.x;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -48,6 +50,8 @@ public class Basket : MonoBehaviour
         {
             BallController.Singleton.currentBasket = this;
             GameManager.Singleton.Catch(id);
+
+            audioSource.Play();
 
             BallController.Singleton.DisableRB();
             collision.gameObject.transform.position = ballPos.position;

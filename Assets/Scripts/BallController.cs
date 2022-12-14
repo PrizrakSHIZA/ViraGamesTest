@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+using Random = UnityEngine.Random;
 
 public class BallController : MonoBehaviour
 {
@@ -20,6 +18,7 @@ public class BallController : MonoBehaviour
 
     #region private hidden
     bool isDragging = false;
+    AudioSource audioSource;
     Camera cam;
     Rigidbody2D rb;
     CircleCollider2D circleCollider;
@@ -36,6 +35,7 @@ public class BallController : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         circleCollider = GetComponent<CircleCollider2D>();
+        audioSource = GetComponent<AudioSource>();
         cam = Camera.main;
     }
 
@@ -112,20 +112,25 @@ public class BallController : MonoBehaviour
 
     void OnDrag() 
     {
+        if (!canPush) return;
         endPoint = cam.ScreenToWorldPoint(Input.mousePosition);
         distance = Vector2.Distance(startPoint, endPoint);
         direction = (startPoint - endPoint).normalized;
         force = direction * distance * pushForce;
 
         trajectory.UpdateDots(transform.position, force);
-        currentBasket.RotateTo(direction);
-        currentBasket.PullNet(Mathf.Clamp(distance, 1, 2));
+        if (currentBasket)
+        { 
+            currentBasket.RotateTo(direction);
+            currentBasket.PullNet(Mathf.Clamp(distance, 1, 2));
+        }
 
         Debug.DrawLine(startPoint, endPoint);
     }
 
     void OnDragEnd()
     {
+        if (!canPush) return;
         EnableRB();
         transform.SetParent(null);
         Push(force);
@@ -136,8 +141,16 @@ public class BallController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.gameObject.tag == "Wall")
+        {
             wallBounce = true;
+            audioSource.pitch = Random.Range(.5f, 1.5f);
+            audioSource.Play();
+        }
         else if (collision.collider.tag == "Ring")
+        { 
             hitCount++;
+            audioSource.pitch = Random.Range(.5f, 1.5f);
+            audioSource.Play();
+        }
     }
 }
