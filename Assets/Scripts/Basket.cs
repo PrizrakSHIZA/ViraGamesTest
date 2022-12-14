@@ -6,6 +6,7 @@ using UnityEngine;
 public class Basket : MonoBehaviour
 {
     public bool inBasket = false;
+    public int id;
 
     [Header("Tween settings")]
     [SerializeField] float time;
@@ -24,6 +25,12 @@ public class Basket : MonoBehaviour
         baseBallPos = ballPos.localPosition;
     }
 
+    private void Update()
+    {
+        if (transform.position.y <= -5f)
+            gameObject.SetActive(false);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //net shaking
@@ -35,6 +42,9 @@ public class Basket : MonoBehaviour
 
         if (inBasket)
         {
+            BallController.Singleton.currentBasket = this;
+            GameManager.Singleton.Catch(id);
+
             BallController.Singleton.DisableRB();
             collision.gameObject.transform.position = ballPos.position;
             collision.gameObject.transform.SetParent(ballPos.transform, true);
@@ -45,7 +55,6 @@ public class Basket : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         inBasket = true;
-        BallController.Singleton.currentBasket = this;
     }
 
     private void OnTriggerExit2D(Collider2D collision)

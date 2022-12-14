@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Trajectory : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class Trajectory : MonoBehaviour
     Transform[] dotsList;
 
     Vector2 pos;
-    float timeStamp;
+    float timeStep;
 
     private void Start()
     {
@@ -41,14 +42,14 @@ public class Trajectory : MonoBehaviour
 
     public void UpdateDots(Vector2 ballPos, Vector2 forceApplied) 
     {
-        timeStamp = spacing;
+        timeStep = spacing;
         for (int i = 0; i < amount; i++)
         {
-            pos.x = (ballPos.x + forceApplied.x * timeStamp);
-            pos.y = (ballPos.y + forceApplied.y * timeStamp) - (Physics2D.gravity.magnitude * timeStamp * timeStamp) / 2f;
+            pos.x = (ballPos.x + forceApplied.x * timeStep);
+            pos.y = (ballPos.y + forceApplied.y * timeStep) - (Physics2D.gravity.magnitude * timeStep * timeStep) / 2f;
 
             dotsList[i].position = pos;
-            timeStamp += spacing;
+            timeStep += spacing;
         }
     }
 
