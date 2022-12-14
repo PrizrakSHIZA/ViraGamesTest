@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Compilation;
 using UnityEngine;
 
 public class Basket : MonoBehaviour
@@ -13,9 +14,10 @@ public class Basket : MonoBehaviour
     [SerializeField] float strength;
     [SerializeField] int vibrato;
     [SerializeField] float randomness;
-    [Space]
+    [Header("References")]
     [SerializeField] Transform ballPos;
     [SerializeField] Transform net;
+    public GameObject star;
 
     Vector3 baseBallPos;
     bool inMotion = false;

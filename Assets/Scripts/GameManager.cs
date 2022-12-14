@@ -4,13 +4,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Singleton;
 
+    [Header("Settings")]
     [SerializeField] float moveSpeed = 3f;
+    [SerializeField, Range(0, 1f)] float starChance;
+    [Header("References")]
     [SerializeField] Basket[] basketList;
     [SerializeField] GameObject basketPrefab;
     [SerializeField] Transform gameField;
 
     int globalBasket = 0;
-    [SerializeField] int score = 0;
+    int score = 0;
     int starCount = 0;
 
     int baseScore = 1;
@@ -62,6 +65,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddStar()
+    {
+        starCount++;
+    }
+
     void AddScore()
     {
         int toAdd = baseScore;
@@ -82,8 +90,8 @@ public class GameManager : MonoBehaviour
         if(nextBasketId > 3)
             nextBasketId = 0;
 
-        GameObject lastBasket = basketList[lastBasketId].gameObject;
-        GameObject nextBasket = basketList[nextBasketId].gameObject;
+        Basket lastBasket = basketList[lastBasketId];
+        Basket nextBasket = basketList[nextBasketId];
 
         if (++lastBasketId > 3)
             lastBasketId = 0;
@@ -103,9 +111,13 @@ public class GameManager : MonoBehaviour
         float y = lastBasket.transform.position.y + Random.Range(3f, 4f);
 
         nextBasket.transform.position = new Vector3(x, y, 0);
-        nextBasket.GetComponent<Basket>().id = globalBasket;
+        nextBasket.id = globalBasket;
 
-        nextBasket.SetActive(true);
+        //star spawn
+        if(Random.Range(0f, 1f) <= starChance)
+            nextBasket.star.SetActive(true);
+
+        nextBasket.gameObject.SetActive(true);
         //spawn animation
     }
 }

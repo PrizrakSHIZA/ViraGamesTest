@@ -813,6 +813,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49160f4dd5cae44429c1eecd7626c012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 3
+  starChance: 0.2
   basketList:
   - {fileID: 1591065279}
   - {fileID: 2046412362}
@@ -875,6 +877,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 255059007}
     m_Modifications:
+    - target: {fileID: 329218488039278796, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599128, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_Name
       value: Basket 4
