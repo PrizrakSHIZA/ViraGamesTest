@@ -670,8 +670,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 181e49c34ec4cba47a7b3acd41938235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amount: 30
-  spacing: 0.03
+  amount: 10
+  spacing: 0.1
   dotMinScale: 0.1
   dotMaxScale: 0.3
   dotsParent: {fileID: 1296936075}
@@ -720,7 +720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599128, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599129, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_RootOrder
@@ -732,7 +732,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599129, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.18
+      value: -5.87
       objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599129, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -968,7 +968,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599128, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599129, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_RootOrder
@@ -980,7 +980,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599129, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.18
+      value: -5.87
       objectReference: {fileID: 0}
     - target: {fileID: 6827916185686599129, guid: 4fcfb3846fdabb1429135cc7d926628a, type: 3}
       propertyPath: m_LocalPosition.z
