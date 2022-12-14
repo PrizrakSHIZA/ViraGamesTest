@@ -118,6 +118,8 @@ public class GameManager : MonoBehaviour
             nextBasket.star.SetActive(true);
 
         nextBasket.gameObject.SetActive(true);
+
         //spawn animation
+        nextBasket.Spawn();
     }
 }

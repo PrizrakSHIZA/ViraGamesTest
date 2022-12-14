@@ -21,10 +21,12 @@ public class Basket : MonoBehaviour
 
     Vector3 baseBallPos;
     bool inMotion = false;
+    float desireScale;
 
-    private void Start()
+    private void Awake()
     {
         baseBallPos = ballPos.localPosition;
+        desireScale = transform.localScale.x;
     }
 
     private void Update()
@@ -62,6 +64,12 @@ public class Basket : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         inBasket = false;
+    }
+
+    public void Spawn()
+    {
+        transform.localScale = Vector3.zero;
+        transform.DOScale(desireScale, .5f).SetEase(Ease.OutBack);
     }
 
     public void RotateTo(Vector3 direction)
