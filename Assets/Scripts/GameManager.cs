@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,6 +12,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] Basket[] basketList;
     [SerializeField] GameObject basketPrefab;
     [SerializeField] Transform gameField;
+    [SerializeField] GameObject losePopUp;
+    [Header("Score refs")]
+    [SerializeField] GameObject floatingTextPrefab;
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI starScoreText;
 
     int globalBasket = 0;
     int score = 0;
@@ -49,6 +55,7 @@ public class GameManager : MonoBehaviour
             AddScore();
             SpawnBasket();
         }
+        else BallController.Singleton.ClearHitData();
     }
 
     public void GameOver()
@@ -60,23 +67,31 @@ public class GameManager : MonoBehaviour
             BallController.Singleton.ClearHitData();
         }
         else
-        { 
-            
+        {
+            losePopUp.SetActive(true);
         }
     }
 
     public void AddStar()
     {
         starCount++;
+        starScoreText.text = starCount.ToString();
     }
 
     void AddScore()
     {
+        string floatText = "";
         int toAdd = baseScore;
-        if (BallController.Singleton.wallBounce) toAdd *= 2;
-        if (BallController.Singleton.hitCount == 0) toAdd *= 2;
+        if (BallController.Singleton.wallBounce) { toAdd *= 2; floatText += "Bounce!\n"; }
+        if (BallController.Singleton.hitCount == 0) { toAdd *= 2; floatText += "Perfect!\n"; }
+
+        floatText += toAdd.ToString();
+        GameObject temp = Instantiate(floatingTextPrefab, basketList[lastBasketId].transform.position, Quaternion.identity, null);
+        temp.GetComponentInChildren<TextMesh>().text = floatText;
 
         score += toAdd;
+
+        scoreText.text = score.ToString();
 
         //clear data from ball
         BallController.Singleton.ClearHitData();

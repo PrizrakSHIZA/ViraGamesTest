@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
 public class BallController : MonoBehaviour
@@ -46,7 +48,7 @@ public class BallController : MonoBehaviour
             isDragging = true;
             OnDragStart();
         }
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && isDragging)
         {
             isDragging = false;
             OnDragEnd();
@@ -105,6 +107,12 @@ public class BallController : MonoBehaviour
     //-Drag--------------------------------------
     void OnDragStart()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            isDragging = false; 
+            return;
+        }
+        
         if (!canPush) return;
         startPoint = cam.ScreenToWorldPoint(Input.mousePosition);
         trajectory.Show();
@@ -124,8 +132,6 @@ public class BallController : MonoBehaviour
             currentBasket.RotateTo(direction);
             currentBasket.PullNet(Mathf.Clamp(distance, 1, 2));
         }
-
-        Debug.DrawLine(startPoint, endPoint);
     }
 
     void OnDragEnd()
