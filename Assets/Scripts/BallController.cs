@@ -15,6 +15,8 @@ public class BallController : MonoBehaviour
     [SerializeField] Trajectory trajectory;
     [SerializeField] float pushForce = 4f;
 
+    [SerializeField] ParticleSystem particleSystem;
+
     [HideInInspector] public bool wallBounce = false;
     [HideInInspector] public int hitCount = 0;
 
@@ -24,6 +26,7 @@ public class BallController : MonoBehaviour
     Camera cam;
     Rigidbody2D rb;
     CircleCollider2D circleCollider;
+    TrailRenderer trailRenderer;
     Vector2 startPoint;
     Vector2 endPoint;
     Vector2 direction;
@@ -39,6 +42,7 @@ public class BallController : MonoBehaviour
         circleCollider = GetComponent<CircleCollider2D>();
         audioSource = GetComponent<AudioSource>();
         cam = Camera.main;
+        trailRenderer = GetComponent<TrailRenderer>();
     }
 
     void Update()
@@ -158,5 +162,16 @@ public class BallController : MonoBehaviour
             audioSource.pitch = Random.Range(.5f, 1.5f);
             audioSource.Play();
         }
+    }
+
+    //-Effects-----------------------------------
+    public void EnablePS()
+    {
+        particleSystem.Play();
+    }
+
+    public void EnableTrail()
+    {
+        trailRenderer.enabled = true;
     }
 }

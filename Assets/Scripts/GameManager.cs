@@ -95,6 +95,17 @@ public class GameManager : MonoBehaviour
 
         //clear data from ball
         BallController.Singleton.ClearHitData();
+
+        //Ball Effects
+        CheckRules();
+    }
+
+    void CheckRules()
+    {
+        if (score >= 5)
+            BallController.Singleton.EnableTrail();
+        if (score >= 10)
+            BallController.Singleton.EnablePS();
     }
 
     void SpawnBasket()
