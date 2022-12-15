@@ -42,11 +42,22 @@ public class Trajectory : MonoBehaviour
 
     public void UpdateDots(Vector2 ballPos, Vector2 forceApplied) 
     {
+        // To make this mopre precisive here could be used physics scene creating and ball from simulation for each update.
+        // This will handle also all bounces and etc. but its pretty expinsive for performance. So i decide not to use that for HC mobile game.
+        bool wallHit = false;
         timeStep = spacing;
         for (int i = 0; i < amount; i++)
         {
             pos.x = (ballPos.x + forceApplied.x * timeStep);
             pos.y = (ballPos.y + forceApplied.y * timeStep) - (Physics2D.gravity.magnitude * timeStep * timeStep) / 2f;
+
+            RaycastHit2D hit = Physics2D.Raycast(pos, -Vector3.up);
+
+            if (hit.collider != null && hit.collider.tag == "Wall")
+                wallHit = true;
+
+            if (wallHit)
+                pos.y = -10;
 
             dotsList[i].position = pos;
             timeStep += spacing;
